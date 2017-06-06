@@ -12,12 +12,13 @@ namespace ScanWorker
         Twain _twain;
         ScanSettings _settings;
         IScanMaster scanMaster;
+        public WinFormsWindowMessageHook twain_hook;
 
         public MainForm() {
             InitializeComponent();
             this.Text = "ScanWorker";
 
-            _twain = new Twain(new WinFormsWindowMessageHook(this));
+            _twain = new Twain(twain_hook = new WinFormsWindowMessageHook(this));
         }
 
         public void RegisterMaster(IScanMaster scanMaster) {
@@ -61,6 +62,13 @@ namespace ScanWorker
             catch (TwainException ex) {
                 MessageBox.Show(ex.Message);
                 Enabled = true;
+            }
+        }
+
+        public void SelectSource() {
+            if (this.CanFocus) {
+                Console.WriteLine("SelectSource()");
+                _twain.SelectSource();
             }
         }
 

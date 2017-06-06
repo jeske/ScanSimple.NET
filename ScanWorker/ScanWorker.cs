@@ -13,12 +13,13 @@ namespace ScanWorker
         void Exit(); // to tell us to shutdown cleanly
         
         void StartScanning();
+        void SelectSource();
     }
 
     public interface IScanMaster
     {
         bool pong(); // so we can check if the master is responding
-        void ScanDataTransfer(byte[] scanBitmap);
+        void ScanDataTransfer(byte[] scanBitmap);        
     }
 
     public class ScanWorker : MarshalByRefObject, IScanWorker
@@ -66,6 +67,14 @@ namespace ScanWorker
             mainForm.Invoke((MethodInvoker)delegate {
                 mainForm.StartScanning();
             });
+        }
+
+        public void SelectSource() {
+            if (!mainForm.twain_hook.UseFilter) {
+                mainForm.Invoke((MethodInvoker)delegate {
+                    mainForm.SelectSource();
+                });
+            }
         }
 
         #endregion

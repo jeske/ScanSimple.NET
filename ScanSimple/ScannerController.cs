@@ -72,18 +72,22 @@ namespace ScanSimple
 
         public void ShutdownScanWorker() {
             if (scanWorker != null) {
+
                 scanWorker.Exit(); // send Exit message
                 scanWorker = null;
             }
             if (workerProcess != null) {
                 // try to wait for the worker to shutdown cleanly
-                for (int i=0;i<20;i++) {
-                    Thread.Sleep(40);
+                for (int i=0;i<10;i++) {
+                    Thread.Sleep(10);
                     if (workerProcess.HasExited) {
                         Console.WriteLine("worker exited cleanly: " + workerProcess.ExitCode);
                         break;
                     }
-                }                
+                }   
+                if (!workerProcess.HasExited) {
+                    workerProcess.Kill();
+                }
             }
         }
 

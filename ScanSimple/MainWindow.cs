@@ -3,6 +3,7 @@ using Xwt;
 using Xwt.Drawing;
 using System.Xml;
 using System.Reflection;
+using System.Threading;
 
 namespace ScanSimple
 {
@@ -15,7 +16,9 @@ namespace ScanSimple
         public ImageView imageView;
 
         protected override void OnClosed() {
-            scanControllerWidget.scannerController.ShutdownScanWorker();
+            ThreadPool.QueueUserWorkItem(delegate (object o) {
+                scanControllerWidget.scannerController.ShutdownScanWorker();
+            },null);
             Application.Exit();
         }
 
