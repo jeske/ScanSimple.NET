@@ -11,13 +11,14 @@ namespace ScanWorker
         bool ping(); // so we can check if the worker is responding
         void RegisterMaster(IScanMaster scanMaster);
         void Exit(); // to tell us to shutdown cleanly
-
+        
+        void StartScanning();
     }
 
     public interface IScanMaster
     {
         bool pong(); // so we can check if the master is responding
-        void ScanDataTransfer(Bitmap scanBitmap);
+        void ScanDataTransfer(byte[] scanBitmap);
     }
 
     public class ScanWorker : MarshalByRefObject, IScanWorker
@@ -57,6 +58,13 @@ namespace ScanWorker
             mainForm.Invoke((MethodInvoker)delegate {
                 Console.WriteLine("Shutting Down...");
                 Application.Exit();
+            });
+        }
+
+
+        public void StartScanning() {
+            mainForm.Invoke((MethodInvoker)delegate {
+                mainForm.StartScanning();
             });
         }
 

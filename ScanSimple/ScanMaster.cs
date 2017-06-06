@@ -24,7 +24,8 @@ namespace ScanSimple
             return true;
         }
 
-        public void ScanDataTransfer(Bitmap image) {
+        public void ScanDataTransfer(byte[] image) {
+            Console.WriteLine("master received image bytes: " + image.Length);
             mainWindow.InvokeAsync((Action)delegate {
                 scanControllerWidget.HandleScannerData(image);
             });

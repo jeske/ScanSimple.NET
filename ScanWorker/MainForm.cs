@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
 using TwainDotNet;
 using TwainDotNet.WinFroms;
+
+using System.IO;
 
 namespace ScanWorker
 {
@@ -29,12 +23,45 @@ namespace ScanWorker
         public void RegisterMaster(IScanMaster scanMaster) {
             this.scanMaster = scanMaster;
             _twain.TransferImage += delegate (Object sender, TransferImageEventArgs args) {
+                Console.WriteLine("sending Scanned Image...");
                 if (args.Image != null) {
                     if (scanMaster != null) {
-                        scanMaster.ScanDataTransfer(args.Image);
+                        MemoryStream ms = new MemoryStream();
+                        args.Image.Save(ms,System.Drawing.Imaging.ImageFormat.Bmp);
+                        scanMaster.ScanDataTransfer(ms.ToArray());
                     }
                 }
             };
+        }
+
+        public void StartScanning() {
+            _settings = new ScanSettings();         
+            _settings.ShowTwainUI = false;
+            _settings.ShowProgressIndicatorUI = false;
+            /*
+            _settings.UseDocumentFeeder = useAdfCheckBox.Checked;
+            _settings.ShowTwainUI = useUICheckBox.Checked;
+            _settings.ShowProgressIndicatorUI = showProgressIndicatorUICheckBox.Checked;
+            _settings.UseDuplex = useDuplexCheckBox.Checked;
+            _settings.Resolution =
+                blackAndWhiteCheckBox.Checked
+                ? ResolutionSettings.Fax : ResolutionSettings.ColourPhotocopier;
+            _settings.Area = !checkBoxArea.Checked ? null : AreaSettings;
+            _settings.ShouldTransferAllPages = true;
+
+            _settings.Rotation = new RotationSettings() {
+                AutomaticRotate = autoRotateCheckBox.Checked,
+                AutomaticBorderDetection = autoDetectBorderCheckBox.Checked
+            };
+            */
+
+            try {
+                _twain.StartScanning(_settings);
+            }
+            catch (TwainException ex) {
+                MessageBox.Show(ex.Message);
+                Enabled = true;
+            }
         }
 
         protected override void OnClosed(EventArgs e) {

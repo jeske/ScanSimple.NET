@@ -16,7 +16,7 @@ namespace ScanSimple
     class ScannerController
     {
         ScannerControllerWidget scanControllerWidget;
-        IScanWorker scanWorker;
+        public IScanWorker scanWorker;
         IScanMaster scanMaster;
         Process workerProcess;
 
