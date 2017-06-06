@@ -12,6 +12,8 @@ namespace ScanSimple
     {
         [STAThread]
         static void Main(string[] args) {
+            // Prefs.ClearAllSettings();
+
             MainWindow w = null;
             try { 
                 Application.Initialize(ToolkitType.Wpf);

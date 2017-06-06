@@ -24,9 +24,29 @@ namespace ScanSimple
             },null);
             Application.Exit();
         }
+        
+        protected override void OnBoundsChanged(BoundsChangedEventArgs evt) {
+            if (evt.Bounds.Width < 400) { Width = 400; }
+            if (evt.Bounds.Height < 400) { Height = 400; }                        
+
+            Prefs.SetPref("MainWindow.Width", evt.Bounds.Width);
+            Prefs.SetPref("MainWindow.Height", evt.Bounds.Height);
+            Prefs.SetPref("MainWindow.X",evt.Bounds.X);
+            Prefs.SetPref("MainWindow.Y",evt.Bounds.Y);
+            base.OnBoundsChanged(evt);
+        }
 
         public MainWindow() {
-            Title = "ScanSimple";            
+            Title = "ScanSimple";          
+            Width = Prefs.GetPref("MainWindow.Width",800);
+            Height = Prefs.GetPref("MainWindow.Height", 800);            
+
+            if (Prefs.HasPref("MainWindow.X")) {
+                X = Prefs.GetPref("MainWindow.X", 100);
+                Y = Prefs.GetPref("MainWindow.Y", 100);
+            }
+            
+            // TODO: check that our window is not too small and on the visible screen
 
             // Get this type's assembly
             Assembly assem = this.GetType().Assembly;
