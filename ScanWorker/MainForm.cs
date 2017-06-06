@@ -17,6 +17,10 @@ namespace ScanWorker
         public MainForm() {
             InitializeComponent();
             this.Text = "ScanWorker";
+            this.WindowState = FormWindowState.Minimized;
+            
+            // when we are ready, we can hide the worker from the taskbar
+            // this.ShowInTaskbar = false;
 
             _twain = new Twain(twain_hook = new WinFormsWindowMessageHook(this));
         }

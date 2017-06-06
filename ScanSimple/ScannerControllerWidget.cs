@@ -46,7 +46,7 @@ namespace ScanSimple
             scannerController.scanWorker.StartScanning();
         }
 
-        public void HandleScannerData(byte[] image) {
+        public void HandleScannerData(byte[] imagedata) {
             var imageView = new ImageView();
             imageView.Margin = 0.3;
             imageView.MinHeight = 200;
@@ -55,8 +55,9 @@ namespace ScanSimple
             outerBox.PackStart(imageView, expand: true, fill: true);
 
             try {
-                MemoryStream ms = new MemoryStream(image);
-                imageView.Image = Xwt.Drawing.Image.FromStream(ms);
+                MemoryStream ms = new MemoryStream(imagedata);
+                var image = Xwt.Drawing.Image.FromStream(ms).Scale(0.25);                
+                imageView.Image = image;
             }
             catch (Exception e) {
                 Console.WriteLine("exception: " + e.ToString());
