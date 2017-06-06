@@ -14,6 +14,7 @@ namespace ScanSimple
         ScrollView mainScrollView;
 
         protected override void OnClosed() {
+            scanControllerWidget.scannerController.ShutdownScanWorker();
             Application.Exit();
         }
 

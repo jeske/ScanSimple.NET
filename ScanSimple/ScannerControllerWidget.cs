@@ -11,7 +11,7 @@ namespace ScanSimple
 
         ImageView scannerImage;
         Button scanButton;        
-        ScannerController scannerController;
+        public ScannerController scannerController;
 
         public ScannerControllerWidget(MainWindow myWindow) {
             this.myWindow = myWindow;
