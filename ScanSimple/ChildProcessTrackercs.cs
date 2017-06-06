@@ -1,13 +1,13 @@
-﻿using System;
+﻿// from StackOverflow:
+// https://stackoverflow.com/questions/3342941/kill-child-process-when-parent-process-is-killed/9507862#9507862
+
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace ScanSimple
 {
-    // from: 
-    // https://stackoverflow.com/questions/3342941/kill-child-process-when-parent-process-is-killed/9507862#9507862
-
 
     /// <summary>
     /// Allows processes to be automatically killed if this parent process unexpectedly quits.

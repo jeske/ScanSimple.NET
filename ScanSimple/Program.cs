@@ -1,4 +1,7 @@
-﻿using System;
+﻿// ScanSimple
+// Copyright (C) 2017, by David W. Jeske, all Rights Reserved
+
+using System;
 using Xwt;
 using Xwt.Drawing;
 
