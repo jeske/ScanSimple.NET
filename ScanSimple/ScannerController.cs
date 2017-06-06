@@ -2,6 +2,7 @@
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Ipc;
 
+using System.Collections;
 using System.Diagnostics;
 using System.IO;
 
@@ -14,21 +15,30 @@ namespace ScanSimple
 
     class ScannerController
     {
-        ScannerControllerWidget myWidget;
+        ScannerControllerWidget scanControllerWidget;
         IScanWorker scanWorker;
+        IScanMaster scanMaster;
         Process workerProcess;
 
-        public ScannerController(ScannerControllerWidget myWidget) {
-            this.myWidget = myWidget;
+        public ScannerController(ScannerControllerWidget scanControllerWidget) {
+            this.scanControllerWidget = scanControllerWidget;
 
             // connect to the scanner controller
-            IpcChannel clientChannel = new IpcChannel();
+            var serverProvider = new BinaryServerFormatterSinkProvider();
+            var clientProvider = new BinaryClientFormatterSinkProvider();
+            serverProvider.TypeFilterLevel = System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+
+            var props = new Hashtable();
+            props["name"] = "ipc";
+            props["portName"] = ScanWorker.Program.APP_NAME + "_CLIENT";
+
+            IpcChannel clientChannel = new IpcChannel(props,clientProvider,serverProvider);
             ChannelServices.RegisterChannel(clientChannel);
 
             scanWorker = 
                 (IScanWorker) Activator.GetObject(
                     typeof(ScanWorker.ScanWorker),
-                    "ipc://ScanSimple/ScanWorker");
+                    "ipc://ScanSimple/ScanWorker");            
 
             try {
                 // try to connect to existing scan worker process first (for debugging)
@@ -52,6 +62,10 @@ namespace ScanSimple
 
                 // if we didn't connect, this will throw an exception
                 bool alive = scanWorker.ping();
+
+                // now create our scan master listener, and send it over
+                scanMaster = new ScanMaster(scanControllerWidget.mainWindow, scanControllerWidget);
+                scanWorker.RegisterMaster(scanMaster);
             }            
 
         }

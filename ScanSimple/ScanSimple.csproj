@@ -68,6 +68,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ScanMaster.cs" />
     <Compile Include="ScannerController.cs" />
     <Compile Include="ScannerControllerWidget.cs" />
     <Compile Include="ScanSessionWidget.cs" />

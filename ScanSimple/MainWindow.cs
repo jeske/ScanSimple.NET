@@ -12,6 +12,7 @@ namespace ScanSimple
         ScannerControllerWidget scanControllerWidget;
         VBox scanSessionsVBox;
         ScrollView mainScrollView;
+        public ImageView imageView;
 
         protected override void OnClosed() {
             scanControllerWidget.scannerController.ShutdownScanWorker();
@@ -40,7 +41,9 @@ namespace ScanSimple
                 panel.PackStart(scanSessionsVBox = new VBox());
                 panel.PackStart(new Canvas(),true);
 
+                panel.PackStart(imageView = new ImageView(),expand:true);
             }
+            
         }
 
         public void AddScanSession(ScanSessionWidget scanSession) {

@@ -1,20 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Threading;
-
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace ScanWorker
 {
 
     public interface IScanWorker
     {
-        bool ping(); // so we can check if the server is responding
+        bool ping(); // so we can check if the worker is responding
+        void RegisterMaster(IScanMaster scanMaster);
         void Exit(); // to tell us to shutdown cleanly
 
+    }
+
+    public interface IScanMaster
+    {
+        bool pong(); // so we can check if the master is responding
+        void ScanDataTransfer(Bitmap scanBitmap);
     }
 
     public class ScanWorker : MarshalByRefObject, IScanWorker
@@ -40,6 +43,13 @@ namespace ScanWorker
 
         private void UiThread_ping() {
             Console.WriteLine("_ping on ThreadId: " + Thread.CurrentThread.ManagedThreadId);
+        }
+
+        public void RegisterMaster(IScanMaster scanMaster) {
+            scanMaster.pong();
+            mainForm.Invoke((MethodInvoker)delegate { 
+                mainForm.RegisterMaster(scanMaster);
+            });
         }
 
         public void Exit() {
