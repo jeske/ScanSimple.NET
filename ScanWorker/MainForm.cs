@@ -80,8 +80,8 @@ namespace ScanWorker
         }
 
         protected override void OnClosed(EventArgs e) {
-            base.OnClosed(e);
-            Application.Exit();
+            Console.WriteLine("ScanWorker: OnClosed: Exiting.");
+            Application.Exit();            
         }
     }
 }

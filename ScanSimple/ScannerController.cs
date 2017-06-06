@@ -73,10 +73,17 @@ namespace ScanSimple
 
         }
 
-        public void ShutdownScanWorker() {
-            if (scanWorker != null) {
 
-                scanWorker.Exit(); // send Exit message
+        bool Exiting = false;
+        public void ShutdownScanWorker() {
+            Exiting = true;
+            if (scanWorker != null) {                
+                try { 
+                    scanWorker.Exit(); // send Exit message
+                } catch (Exception e) {
+                    Console.WriteLine("Exception sending ScanWorker.Exit(): " + e.ToString());
+                }
+                
                 scanWorker = null;
             }
             if (workerProcess != null) {
@@ -105,12 +112,38 @@ namespace ScanSimple
                 throw new Exception("no ScanWorker.EXE at: " + workerEXEPath);
             }
 
-            // launch the worker process
-            workerProcess = Process.Start(workerEXEPath);
+            // launch the worker process                       
+            // workerProcess = Process.Start(workerEXEPath);
+
+            workerProcess = new Process();
+            workerProcess.StartInfo.UseShellExecute = false;
+            workerProcess.StartInfo.FileName = workerEXEPath;
+            workerProcess.StartInfo.RedirectStandardOutput = true;
+            workerProcess.OutputDataReceived += WorkerProcess_OutputDataReceived;
+            workerProcess.Exited += WorkerProcess_Exited;
+            workerProcess.Start();
+            workerProcess.BeginOutputReadLine();
+
+            // we might want to catch the standard ouput and do something with it
+            // https://msdn.microsoft.com/en-us/library/system.diagnostics.processstartinfo.redirectstandardoutput(v=vs.110).aspx
 
             // make sure the child process dies when we die, using a Job object
             // https://stackoverflow.com/questions/3342941/kill-child-process-when-parent-process-is-killed
             ChildProcessTracker.AddProcess(workerProcess);
+        }
+
+        private void WorkerProcess_Exited(object sender, EventArgs e) {
+            if (!Exiting) {
+                Console.WriteLine("ScanWorker Exited Unexpectedly: " + workerProcess.ExitCode);
+            }
+        }
+
+        private void WorkerProcess_OutputDataReceived(object sender, DataReceivedEventArgs e) {            
+            if (e.Data == null) {
+                Console.WriteLine("ScanWorker Exited: " + workerProcess.ExitCode);
+            } else {
+                Console.WriteLine("Worker: " + e.Data);
+            }
         }
     }
 }

@@ -37,7 +37,7 @@ namespace ScanWorker
             props["name"] = "ipc";            
             props["portName"] = APP_NAME;
 
-            IpcChannel serverChannel = new IpcChannel(props, clientProvider, serverProvider);
+            IpcChannel serverChannel = new IpcChannel(props, clientProvider, serverProvider);            
             
             ChannelServices.RegisterChannel(serverChannel);
             RemotingConfiguration.ApplicationName = APP_NAME;
