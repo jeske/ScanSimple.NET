@@ -7,9 +7,11 @@ namespace ScanSimple
 {
     class ScannerControllerWidget : Widget
     {
+        internal MainWindow myWindow;
+
         ImageView scannerImage;
-        Button scanButton;
-        MainWindow myWindow;
+        Button scanButton;        
+        ScannerController scannerController;
 
         public ScannerControllerWidget(MainWindow myWindow) {
             this.myWindow = myWindow;
@@ -19,6 +21,9 @@ namespace ScanSimple
             outerBox.PackStart(scannerImage = new ImageView(Image.FromResource("ScanSimple.icons.scanner.jpg")));                 
             outerBox.PackStart(scanButton = new Button("Scan"), expand:true, fill:false);
             scanButton.Clicked += ScanButton_Clicked;
+
+            scannerController = new ScannerController(this);
+            
 
         }
 

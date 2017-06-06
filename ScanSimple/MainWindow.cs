@@ -18,7 +18,7 @@ namespace ScanSimple
         }
 
         public MainWindow() {
-            Title = "ScanSimple";
+            Title = "ScanSimple";            
 
             // Get this type's assembly
             Assembly assem = this.GetType().Assembly;

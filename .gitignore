@@ -4,3 +4,6 @@
 *.suo
 ScanSimple/bin
 ScanSimple/obj
+ScanWorker/bin
+ScanWorker/obj
+packages
